@@ -1,0 +1,224 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Proiect"
+        xmlns:PizzaModel="clr-namespace:PizzaModel;assembly=PizzaModel" x:Class="Proiect.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="chelnerViewSource" d:DesignSource="{d:DesignInstance {x:Type PizzaModel:Chelner}, CreateList=True}"/>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
+                <AdornedElementPlaceholder/>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <CollectionViewSource x:Key="pizzaViewSource" d:DesignSource="{d:DesignInstance {x:Type PizzaModel:Pizza}, CreateList=True}"/>
+        <CollectionViewSource x:Key="comandaViewSource" d:DesignSource="{d:DesignInstance {x:Type PizzaModel:Comanda}, CreateList=True}"/>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black" Offset="0"/>
+                <GradientStop Color="#FFC56640" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <GroupBox x:Name="gbOperations" Button.Click="gbOperations_Click" Header="" HorizontalAlignment="Left" Height="158" Margin="10,34,0,0" VerticalAlignment="Top" Width="115">
+            <StackPanel x:Name="spOperations" Margin="0,0,-1.8,0.4">
+                <Button x:Name="btnNew" Content="Add" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="97" Height="44" Click="btnNew_Click" Background="#FF822901" />
+                <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="97" Height="44" Click="btnEditO_Click" Background="#FF822B02"/>
+                <Button x:Name="btnDelete" Content="Delete" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="97" Height="44" Click="btnDeleteO_Click" Background="#FF88330B"/>
+
+            </StackPanel>
+        </GroupBox>
+        <GroupBox x:Name="gbActions" Header="" HorizontalAlignment="Left" Height="118" Margin="10,229,0,0" VerticalAlignment="Top" Width="109">
+            <StackPanel HorizontalAlignment="Left" Width="99" Margin="0,0,-2.2,9.4">
+                <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="99" Height="44" Click="btnCancel_Click" Background="#FF7F2A01"/>
+                <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="99" Height="44" Click="btnSave_Click" Background="#FF802A01"/>
+
+
+            </StackPanel>
+        </GroupBox>
+        <TabControl x:Name="tbCtrlPizza" HorizontalAlignment="Left" Height="400" Margin="130,10,0,0" VerticalAlignment="Top" Width="654">
+            <TabItem Header="Chelneri">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FF802A01" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid DataContext="{StaticResource chelnerViewSource}" Margin="0,0,-0.2,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="71*"/>
+                        <ColumnDefinition Width="578*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="chelneri.jpg"/>
+                    </Grid.Background>
+                    <DataGrid x:Name="chelnerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="337.75,244,18,22" RowDetailsVisibilityMode="VisibleWhenSelected" RenderTransformOrigin="0.5,0.5" Background="#FFEEE810" Grid.Column="1">
+                        <DataGrid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform AngleX="-1.021"/>
+                                <RotateTransform/>
+                                <TranslateTransform X="-1.782"/>
+                            </TransformGroup>
+                        </DataGrid.RenderTransform>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="chelner_IdColumn" Binding="{Binding Chelner_Id}" Header="Chelner Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="masaColumn" Binding="{Binding Masa}" Header="Masa" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="numeColumn" Binding="{Binding Nume}" Header="Nume" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="prenumeColumn" Binding="{Binding Prenume}" Header="Prenume" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid1" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Chelner Id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="chelner_IdTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding Chelner_Id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" IsEnabled="False" Background="#FF176B9D"/>
+                        <Label Content="Masa:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="masaTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding Masa, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Background="#FF15A699"/>
+                        <Label Content="Nume:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="numeTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" Text="{Binding Nume, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Validation.ErrorTemplate="{StaticResource validationTemplate}"
+Style="{StaticResource textBoxInError}" Background="#FF1FB8C0"/>
+                        <Label Content="Prenume:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                        <TextBox x:Name="prenumeTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="3" Text="{Binding Prenume, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Validation.ErrorTemplate="{StaticResource validationTemplate}"
+Style="{StaticResource textBoxInError}" Background="#FFAFDBDD"/>
+                    </Grid>
+                    <Button x:Name="btnPrev" Content="Previous" HorizontalAlignment="Left" Margin="230.75,263,0,0" VerticalAlignment="Top" Width="92" Height="28" Click="btnPrevious_Click" Background="#FFDD0C0C" Grid.Column="1"/>
+                    <Button x:Name="btnNext" Content="Next" HorizontalAlignment="Left" Margin="230.75,296,0,0" VerticalAlignment="Top" Width="92" Height="28" Click="btnNext_Click" Background="#FF1C8821" Grid.Column="1"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="Pizza" Header="Pizza">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FFA83737" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid DataContext="{StaticResource pizzaViewSource}">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="pizza.jpg"/>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="11*"/>
+                        <ColumnDefinition Width="77*"/>
+                        <ColumnDefinition Width="24*"/>
+                        <ColumnDefinition Width="537*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="pizzaDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="180,28,138.8,242" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Column="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="gramajColumn" Binding="{Binding Gramaj}" Header="Gramaj" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="pizza_idColumn" Binding="{Binding Pizza_id}" Header="Pizza id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="pretColumn" Binding="{Binding Pret}" Header="Pret" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="sortimentColumn" Binding="{Binding Sortiment}" Header="Sortiment" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid2" HorizontalAlignment="Left" Margin="180,210,0,0" VerticalAlignment="Top" Height="128" Width="196" Grid.Column="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Gramaj:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="gramajTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding Gramaj, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Background="#FFAE7C60"/>
+                        <Label Content="Pizza id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="pizza_idTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding Pizza_id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Background="#FFAD3F01"/>
+                        <Label Content="Pret:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="pretTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" Text="{Binding Pret, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Background="#FF944A20"/>
+                        <Label Content="Sortiment:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                        <TextBox x:Name="sortimentTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="3" Text="{Binding Sortiment, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Background="#FFB97149"/>
+                    </Grid>
+                    <Button x:Name="btnPrev1" Content="Previous" HorizontalAlignment="Left" Margin="180,148,0,0" VerticalAlignment="Top" Width="92" Height="31" Click="btnPrevious_Click" Grid.Column="3" Background="#FFB10202"/>
+                    <Button x:Name="btnNext1" Content="Next" HorizontalAlignment="Left" Margin="310,148,0,0" VerticalAlignment="Top" Width="88" Height="31" Click="btnNext_Click" Grid.Column="3" Background="#FF20A605"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Comenzi">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FFD44F4F" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="#FFC5AC92" DataContext="{StaticResource comandaViewSource}">
+                    <ComboBox x:Name="cmbChelneri" HorizontalAlignment="Left" Margin="89,74,0,0" VerticalAlignment="Top" Width="173" Height="67" SelectedValue="{Binding
+ElementName=comenziDataGrid,Path=SelectedItem.Pizza_Id,Mode=OneWay}">
+                        <ComboBox.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                                <GradientStop Color="#FFA06262" Offset="1"/>
+                            </LinearGradientBrush>
+                        </ComboBox.Background>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="Prenume"/>
+                                            <Binding Path="Nume"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox x:Name="cmbPizza" HorizontalAlignment="Left" Margin="307,74,0,0" VerticalAlignment="Top" Width="173" Height="67" SelectedValue="{Binding
+ElementName=comenziDataGrid,Path=SelectedItem.Pizza_id,Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="Sortiment"/>
+                                            <Binding Path="Pret"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <DataGrid x:Name="comenziDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" IsSynchronizedWithCurrentItem="True" Margin="89,184,236.8,81">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="PrenumeColumn" Binding="{Binding Prenume}" Header="Prenume" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="NumeColumn" Binding="{Binding Nume}" Header="Nume" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="MasaColumn" Binding="{Binding Masa}" Header="Masa" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="SortimentColumn" Binding="{Binding Sortiment}" Header="Sortiment" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="PretColumn" Binding="{Binding Pret}" Header="Pret" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="GramajColumn" Binding="{Binding Gramaj}" Header="Gramaj" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lbChelneri" Content="Chelneri" HorizontalAlignment="Left" Margin="89,30,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lbPizza" Content="Pizza" HorizontalAlignment="Left" Margin="307,30,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+
+    </Grid>
+</Window>
